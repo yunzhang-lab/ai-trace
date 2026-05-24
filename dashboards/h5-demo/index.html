@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Trace Workspace</title>
+  <style>
+    :root {
+      --bg: #f4f5f0;
+      --paper: #fffdfa;
+      --ink: #182124;
+      --muted: #69777a;
+      --line: #dbe2dc;
+      --line-strong: #c7d0ca;
+      --green: #14734f;
+      --green-soft: #dff1e7;
+      --cyan: #0d8295;
+      --cyan-soft: #dff3f6;
+      --amber: #a06400;
+      --amber-soft: #fff0c9;
+      --red: #a33b35;
+      --red-soft: #f9e5e1;
+      --blue: #235f99;
+      --blue-soft: #e0edf8;
+      --violet: #6651a5;
+      --violet-soft: #eee9fa;
+      --shadow: 0 18px 48px rgba(24, 33, 36, 0.10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.76), rgba(244,245,240,0.92)),
+        linear-gradient(90deg, rgba(24,33,36,0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(24,33,36,0.04) 1px, transparent 1px);
+      background-size: auto, 32px 32px, 32px 32px;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px 16px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 253, 250, 0.88);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 6px 8px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+      background:
+        linear-gradient(135deg, #182124 0%, #1f554f 58%, #d4a21b 100%);
+      box-shadow: 0 10px 24px rgba(24, 33, 36, 0.20);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .main-nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav-btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 11px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav-btn:hover {
+      background: rgba(24, 33, 36, 0.05);
+      color: var(--ink);
+    }
+
+    .nav-btn.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .nav-btn span:first-child {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.74;
+      flex: 0 0 8px;
+    }
+
+    .count {
+      font-size: 12px;
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: rgba(255,255,255,0.20);
+    }
+
+    .vault-card {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfcf8;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .content {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .title h2 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 820px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tool {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 11px;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .tool.primary {
+      border-color: var(--green);
+      background: var(--green);
+      color: white;
+    }
+
+    .subnav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .subnav button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: var(--paper);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .subnav button.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: white;
+    }
+
+    .view {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 250, 0.86);
+      border-radius: var(--radius);
+      padding: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(330px, 0.9fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 250, 0.92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .office {
+      min-height: 440px;
+      position: relative;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.74), rgba(238,242,237,0.7)),
+        radial-gradient(circle at 50% 0%, rgba(20,115,79,0.10), transparent 42%);
+    }
+
+    .office::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(24,33,36,0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(24,33,36,0.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(180deg, transparent, black 18%, black 88%, transparent);
+      pointer-events: none;
+    }
+
+    .desks {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .desk {
+      min-height: 185px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.72);
+      padding: 12px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .desk::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 38px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 999px;
+      opacity: 0.96;
+    }
+
+    .desk-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .desk-name strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .desk-name span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .monitor {
+      align-self: center;
+      justify-self: center;
+      width: min(155px, 80%);
+      aspect-ratio: 16 / 10;
+      border: 5px solid #dae2dd;
+      border-radius: 4px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.34), transparent 45%),
+        linear-gradient(180deg, var(--screen), #20333a);
+      box-shadow: 0 10px 18px rgba(24,33,36,0.13);
+      position: relative;
+    }
+
+    .monitor::after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: 13%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 12px 0 rgba(255,255,255,0.34), 42px 12px 0 rgba(255,255,255,0.20);
+    }
+
+    .desk-foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .badge.green { color: var(--green); background: var(--green-soft); border-color: #b9ddc9; }
+    .badge.cyan { color: var(--cyan); background: var(--cyan-soft); border-color: #afdde4; }
+    .badge.amber { color: var(--amber); background: var(--amber-soft); border-color: #ecd08d; }
+    .badge.red { color: var(--red); background: var(--red-soft); border-color: #e9b7b0; }
+    .badge.blue { color: var(--blue); background: var(--blue-soft); border-color: #b9d2e9; }
+    .badge.violet { color: var(--violet); background: var(--violet-soft); border-color: #cec4ee; }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    .table th {
+      color: var(--muted);
+      background: #fbfcf8;
+      font-weight: 700;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .path {
+      color: var(--muted);
+      font-size: 12px;
+      word-break: break-all;
+      line-height: 1.42;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--paper);
+      display: grid;
+      gap: 8px;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .item strong {
+      font-size: 14px;
+    }
+
+    .item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(130px, 170px));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .filters input,
+    .filters select {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: white;
+      color: var(--ink);
+    }
+
+    .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .segmented button {
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 11px;
+      background: white;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .segmented button.active {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .queue-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 29px;
+      padding: 4px 8px;
+      background: #fbfcf8;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .mini.accept { color: var(--green); background: var(--green-soft); border-color: #b9ddc9; }
+    .mini.reject { color: var(--red); background: var(--red-soft); border-color: #e9b7b0; }
+    .mini.private { color: var(--blue); background: var(--blue-soft); border-color: #b9d2e9; }
+
+    .menu-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .menu-card {
+      border: 1px solid var(--line);
+      background: #fbfcf8;
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .menu-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .menu-card span {
+      display: inline-flex;
+      margin: 0 6px 6px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1120px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .main-nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .content {
+        padding: 18px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .metrics,
+      .desks,
+      .menu-map,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .main-nav {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AT</div>
+        <div>
+          <h1>AI Trace</h1>
+          <p>Workspace + Wiki</p>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="一级菜单">
+        <button class="nav-btn active" data-view="office"><span><i class="nav-dot"></i>Office</span><span class="count">6</span></button>
+        <button class="nav-btn" data-view="wiki"><span><i class="nav-dot"></i>Wiki</span><span class="count">4</span></button>
+        <button class="nav-btn" data-view="memory"><span><i class="nav-dot"></i>Memory</span><span class="count">14</span></button>
+        <button class="nav-btn" data-view="sync"><span><i class="nav-dot"></i>Sync</span><span class="count" id="sync-count">5</span></button>
+        <button class="nav-btn" data-view="conflicts"><span><i class="nav-dot"></i>Conflicts</span><span class="count">2</span></button>
+        <button class="nav-btn" data-view="skills"><span><i class="nav-dot"></i>Skills</span><span class="count">1</span></button>
+      </nav>
+
+      <div class="vault-card">
+        Vault / Dashboard Data<br>
+        /Users/fengye/.ai-trace<br><br>
+        Obsidian 和 H5 读取同一份文件，Wiki 与控制台合一。
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="title">
+          <div class="eyebrow" id="eyebrow">Office · Live Floor</div>
+          <h2 id="page-title">AI 办公空间</h2>
+          <p id="page-subtitle">像办公室一样看见每个 Agent 的状态、当前项目、最近动作和交接需求。</p>
+        </div>
+        <div class="toolbar">
+          <button class="tool">打开 Obsidian</button>
+          <button class="tool">刷新状态</button>
+          <button class="tool primary">审核同步</button>
+        </div>
+      </div>
+
+      <div class="subnav" id="subnav"></div>
+
+      <section id="office" class="view">
+        <div class="metrics">
+          <div class="metric"><span>活跃 Agent</span><strong>3</strong></div>
+          <div class="metric"><span>活跃项目</span><strong>4</strong></div>
+          <div class="metric"><span>待审核同步</span><strong id="metric-sync">5</strong></div>
+          <div class="metric"><span>开放冲突</span><strong>2</strong></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Live Floor</h3>
+              <span>agents/&lt;id&gt;/STATUS.json</span>
+            </div>
+            <div class="office">
+              <div class="desks" id="desk-list"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>交接与最近动作</h3>
+              <span>handoff/ + reports/events/</span>
+            </div>
+            <div class="panel-body cards" id="activity-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="wiki" class="view hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Wiki 文档入口</h3>
+              <span>process/ + projects/ + knowledge/</span>
+            </div>
+            <div class="panel-body">
+              <table class="table" id="wiki-table"></table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>一级 / 二级菜单</h3>
+              <span>写入 INFORMATION_FLOW_SPEC.md</span>
+            </div>
+            <div class="panel-body menu-map" id="menu-map"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="memory" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Memory 管理</h3>
+            <span>偏好、知识、教训都需要筛选和审计</span>
+          </div>
+          <div class="panel-body">
+            <div class="segmented" id="memory-type">
+              <button class="active" data-type="preference">Preferences</button>
+              <button data-type="knowledge">Knowledge</button>
+              <button data-type="lesson">Lessons</button>
+            </div>
+            <div class="filters">
+              <input id="memory-search" type="search" placeholder="搜索标题、内容、来源">
+              <select id="memory-scope">
+                <option value="all">全部范围</option>
+                <option value="private">private</option>
+                <option value="cross-agent">cross-agent</option>
+                <option value="global">global</option>
+              </select>
+              <select id="memory-status">
+                <option value="all">全部状态</option>
+                <option value="candidate">candidate</option>
+                <option value="validated">validated</option>
+                <option value="retired">retired</option>
+              </select>
+              <select id="memory-domain">
+                <option value="all">全部领域</option>
+                <option value="communication">communication</option>
+                <option value="workflow">workflow</option>
+                <option value="knowledge">knowledge</option>
+                <option value="execution">execution</option>
+              </select>
+            </div>
+            <div class="cards" id="memory-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sync" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>同步审核台</h3>
+            <span>sync/queue/</span>
+          </div>
+          <div class="panel-body cards" id="sync-list"></div>
+        </div>
+      </section>
+
+      <section id="conflicts" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>冲突池</h3>
+            <span>conflicts/</span>
+          </div>
+          <div class="panel-body cards" id="conflict-list"></div>
+        </div>
+      </section>
+
+      <section id="skills" class="view hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Shared Skill</h3>
+              <span>knowledge/skills/ai-trace-collaboration</span>
+            </div>
+            <div class="panel-body cards" id="skill-list"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>接入方式</h3>
+              <span>QwenPaw / Codex / Claude Code</span>
+            </div>
+            <div class="panel-body">
+              <table class="table" id="skill-table"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let activeView = "office";
+    let activeMemoryType = "preference";
+
+    const data = {
+      agents: [
+        { id: "qwenpaw", name: "QwenPaw / 江玉", type: "主控型", status: "working", color: "#14734f", screen: "#356b61", project: "ai-trace", task: "整理同步和审核规则", pending: 3, root: "/Users/fengye/.qwenpaw/workspaces/default" },
+        { id: "codex", name: "Codex", type: "执行型", status: "review-needed", color: "#0d8295", screen: "#2d6077", project: "ai-trace", task: "生成规范与 H5 demo", pending: 2, root: "/Users/fengye/.codex" },
+        { id: "claude-code", name: "Claude Code", type: "分析型", status: "idle", color: "#6651a5", screen: "#50456f", project: "hanfu", task: "等待文档分析任务", pending: 0, root: "/Users/fengye/.claude" },
+        { id: "qoder", name: "Qoder", type: "执行型", status: "offline", color: "#a06400", screen: "#735731", project: "smarthome", task: "未连接", pending: 0, root: "待确认" },
+        { id: "etl", name: "ETL Runner", type: "工具型", status: "idle", color: "#235f99", screen: "#2c4d6d", project: "reports", task: "等待日志提炼", pending: 0, root: "scripts/" },
+        { id: "human", name: "枫叶审核台", type: "人工审核", status: "review-needed", color: "#a33b35", screen: "#6f3b36", project: "sync", task: "决定哪些内容同步", pending: 5, root: "~/.ai-trace/sync/" }
+      ],
+      wiki: [
+        { title: "AI Trace 系统总纲", type: "system", path: "/Users/fengye/.ai-trace/process/AI_TRACE_SYSTEM.md", summary: "目的、边界、三层结构和真相源原则。" },
+        { title: "内容模型与公私归属", type: "content", path: "/Users/fengye/.ai-trace/process/CONTENT_MODEL_SPEC.md", summary: "身份、偏好、教训、项目、知识、日志、决策冲突七类内容。" },
+        { title: "Agent 定义与注册", type: "agent", path: "/Users/fengye/.ai-trace/process/AGENT_SPEC.md", summary: "Agent 类型、注册流程、入口文件和结束产出。" },
+        { title: "信息流转与视图规范", type: "flow", path: "/Users/fengye/.ai-trace/process/INFORMATION_FLOW_SPEC.md", summary: "提炼、同步、冲突、归档、H5/Wiki 菜单。" }
+      ],
+      menu: [
+        { top: "Office", subs: ["Live Floor", "Agent Detail", "Handoff"] },
+        { top: "Wiki", subs: ["System", "Projects", "Knowledge", "Decisions", "Lessons"] },
+        { top: "Memory", subs: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"] },
+        { top: "Sync", subs: ["Queue", "Approved", "Rejected", "Private"] },
+        { top: "Conflicts", subs: ["Open", "Reviewing", "Resolved"] },
+        { top: "Skills", subs: ["Shared Skill", "Install Notes", "Output Templates"] }
+      ],
+      memory: [
+        { type: "preference", title: "Obsidian 与 ai-trace 合一", domain: "workflow", scope: "global", status: "validated", confidence: "high", source: "user", summary: "共享区直接作为 Obsidian Vault，H5 也读取同一份文件，避免双写不一致。" },
+        { type: "preference", title: "偏好必须可筛选", domain: "workflow", scope: "cross-agent", status: "candidate", confidence: "high", source: "user", summary: "偏好按范围、领域、状态、置信度、来源 Agent 筛选，避免长期记忆污染。" },
+        { type: "preference", title: "沟通更偏讨论和落地", domain: "communication", scope: "global", status: "validated", confidence: "high", source: "profile", summary: "先讨论框架，再沉淀规范和 demo，避免过早碎片化。" },
+        { type: "knowledge", title: "项目公共区保存索引而非实体", domain: "knowledge", scope: "global", status: "validated", confidence: "high", source: "project", summary: "实际代码和文档可以在外部路径，公共区维护 MANIFEST、进度和决策。" },
+        { type: "knowledge", title: "H5 是 Wiki 的可视化前台", domain: "knowledge", scope: "global", status: "candidate", confidence: "medium", source: "demo", summary: "H5 不建立第二数据库，只读取 ai-trace 文件，展示办公空间、筛选和审核。" },
+        { type: "knowledge", title: "Claude Code 用 CLAUDE.md 接入", domain: "execution", scope: "cross-agent", status: "candidate", confidence: "medium", source: "agent", summary: "Claude Code 的入口文件导入 ai-trace 规范和当前项目卡。" },
+        { type: "lesson", title: "不要把完整对话当长期记忆", domain: "workflow", scope: "global", status: "validated", confidence: "high", source: "sync", summary: "原始日志只做证据源，长期继承依赖提炼对象。" },
+        { type: "lesson", title: "私有教训要标记是否已整合", domain: "execution", scope: "cross-agent", status: "candidate", confidence: "high", source: "user", summary: "记录 candidate_id、shared_id、integrated_at、integrated_to，避免重复提炼。" },
+        { type: "lesson", title: "冲突不能埋在项目正文里", domain: "workflow", scope: "global", status: "candidate", confidence: "medium", source: "conflict", summary: "路径、进度、偏好冲突要进入 conflicts/，让所有 Agent 都能看到。" }
+      ],
+      sync: [
+        { id: "sync_001", title: "偏好筛选规则", type: "preference_candidate", agent: "qwenpaw", risk: "medium", target: "preferences/", summary: "将偏好按 scope/domain/status/confidence/source_agent/reviewer 管理。" },
+        { id: "sync_002", title: "知识筛选规则", type: "knowledge_candidate", agent: "codex", risk: "medium", target: "knowledge/", summary: "知识按 domain/type/status/confidence/source/last_reviewed_at 管理。" },
+        { id: "sync_003", title: "私有教训整合标记", type: "lesson_candidate", agent: "qwenpaw", risk: "low", target: "lessons/candidates/", summary: "私有教训应记录 integrated_at、integrated_to、reviewer。" },
+        { id: "sync_004", title: "H5 一级菜单", type: "dashboard_update", agent: "codex", risk: "low", target: "process/INFORMATION_FLOW_SPEC.md", summary: "Office、Wiki、Memory、Sync、Conflicts、Skills 六个一级菜单。" },
+        { id: "sync_005", title: "共享 skill 草案", type: "skill", agent: "codex", risk: "low", target: "knowledge/skills/ai-trace-collaboration/", summary: "让多个 Agent 使用同一套协作、同步、交接规范。" }
+      ],
+      conflicts: [
+        { title: "README 中 daily/ 与实际 reports/daily 不一致", severity: "medium", status: "open", owner: "QwenPaw", summary: "需要更新入口文档，避免新 Agent 写错位置。" },
+        { title: "偏好私有记录和共享记录谁为准", severity: "high", status: "reviewing", owner: "枫叶", summary: "建议优先级：用户确认 > shared validated > private memory > raw log。" }
+      ],
+      activity: [
+        { title: "Codex", meta: "working · ai-trace", summary: "正在重构规范文档和 H5 demo。" },
+        { title: "QwenPaw", meta: "review-needed · memory", summary: "后续负责把偏好、教训、知识候选纳入审核流程。" },
+        { title: "Claude Code", meta: "idle · docs", summary: "适合接文档分析、规范对比和总结任务。" }
+      ],
+      skills: [
+        { title: "ai-trace-collaboration", status: "draft", summary: "定义 Agent 如何读取 ai-trace、判断公私边界、输出交接和同步候选。" },
+        { title: "任务结束模板", status: "ready", summary: "agent/project/changed/verified/risks/handoff/sync_candidates/conflicts/source_logs。" },
+        { title: "同步候选模板", status: "ready", summary: "id/type/source_agent/source_log_path/target/policy/status/risk/summary。" }
+      ]
+    };
+
+    const subnavs = {
+      office: ["Live Floor", "Agent Detail", "Handoff"],
+      wiki: ["System", "Projects", "Knowledge", "Decisions", "Lessons"],
+      memory: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"],
+      sync: ["Queue", "Approved", "Rejected", "Private"],
+      conflicts: ["Open", "Reviewing", "Resolved"],
+      skills: ["Shared Skill", "Install Notes", "Output Templates"]
+    };
+
+    const titles = {
+      office: ["Office · Live Floor", "AI 办公空间", "像办公室一样看见每个 Agent 的状态、当前项目、最近动作和交接需求。"],
+      wiki: ["Wiki · Shared Vault", "Wiki 与控制台合一", "Obsidian 和 H5 读取同一份 ai-trace 文件，文档、项目、知识和决策都从这里进入。"],
+      memory: ["Memory · Filters", "记忆筛选台", "偏好、知识、教训都需要按范围、领域、状态和来源筛选，才能长期维护。"],
+      sync: ["Sync · Review Queue", "同步审核台", "决定哪些候选内容进入共享层，哪些拒绝、保留私有或转为冲突。"],
+      conflicts: ["Conflicts · Resolution", "冲突池", "把偏好、项目进度、路径、知识结论的不一致显式化，让所有 Agent 看到同一份处理结果。"],
+      skills: ["Skills · Shared Protocol", "共享 Skill", "把 ai-trace 协作规范变成多个 Agent 都能读取和执行的操作说明。"]
+    };
+
+    const badgeColor = value => {
+      if (["working", "validated", "low", "ready"].includes(value)) return "green";
+      if (["review-needed", "candidate", "medium", "reviewing"].includes(value)) return "amber";
+      if (["open", "high"].includes(value)) return "red";
+      if (["idle"].includes(value)) return "blue";
+      return "violet";
+    };
+
+    function renderSubnav() {
+      const target = document.getElementById("subnav");
+      target.innerHTML = subnavs[activeView].map((item, index) => (
+        `<button class="${index === 0 ? "active" : ""}">${item}</button>`
+      )).join("");
+    }
+
+    function switchView(view) {
+      activeView = view;
+      document.querySelectorAll(".view").forEach(node => node.classList.add("hidden"));
+      document.getElementById(view).classList.remove("hidden");
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.view === view));
+      document.getElementById("eyebrow").textContent = titles[view][0];
+      document.getElementById("page-title").textContent = titles[view][1];
+      document.getElementById("page-subtitle").textContent = titles[view][2];
+      renderSubnav();
+    }
+
+    function renderDesks() {
+      const target = document.getElementById("desk-list");
+      target.innerHTML = data.agents.map(agent => `
+        <article class="desk" style="--accent:${agent.color};--screen:${agent.screen}">
+          <div class="desk-top">
+            <div class="desk-name">
+              <strong>${agent.name}</strong>
+              <span>${agent.type} · ${agent.project}</span>
+            </div>
+            <span class="badge ${badgeColor(agent.status)}">${agent.status}</span>
+          </div>
+          <div class="monitor" title="${agent.task}"></div>
+          <div class="desk-foot">
+            <span>${agent.task}</span>
+            <span>${agent.pending} sync</span>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderActivity() {
+      document.getElementById("activity-list").innerHTML = data.activity.map(item => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${item.title}</strong>
+            <span class="badge blue">${item.meta}</span>
+          </div>
+          <p>${item.summary}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderWiki() {
+      document.getElementById("wiki-table").innerHTML = `
+        <thead><tr><th>文档</th><th>类型</th><th>作用</th><th>路径</th></tr></thead>
+        <tbody>
+          ${data.wiki.map(item => `
+            <tr>
+              <td><strong>${item.title}</strong></td>
+              <td><span class="badge ${badgeColor(item.type)}">${item.type}</span></td>
+              <td>${item.summary}</td>
+              <td><div class="path">${item.path}</div></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+      document.getElementById("menu-map").innerHTML = data.menu.map(item => `
+        <div class="menu-card">
+          <strong>${item.top}</strong>
+          ${item.subs.map(sub => `<span>${sub}</span>`).join("")}
+        </div>
+      `).join("");
+    }
+
+    function memoryMatches(item) {
+      const q = document.getElementById("memory-search").value.trim().toLowerCase();
+      const scope = document.getElementById("memory-scope").value;
+      const status = document.getElementById("memory-status").value;
+      const domain = document.getElementById("memory-domain").value;
+      if (item.type !== activeMemoryType) return false;
+      if (scope !== "all" && item.scope !== scope) return false;
+      if (status !== "all" && item.status !== status) return false;
+      if (domain !== "all" && item.domain !== domain) return false;
+      if (!q) return true;
+      return [item.title, item.summary, item.source, item.domain, item.scope].join(" ").toLowerCase().includes(q);
+    }
+
+    function renderMemory() {
+      const filtered = data.memory.filter(memoryMatches);
+      document.getElementById("memory-list").innerHTML = filtered.map(item => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${item.title}</strong>
+            <span class="badge ${badgeColor(item.status)}">${item.status}</span>
+          </div>
+          <p>${item.summary}</p>
+          <div class="path">${item.type} · ${item.domain} · ${item.scope} · confidence ${item.confidence} · source ${item.source}</div>
+        </article>
+      `).join("") || `<article class="item"><p>没有符合筛选条件的记录。</p></article>`;
+    }
+
+    function renderSync() {
+      document.getElementById("sync-list").innerHTML = data.sync.map(item => `
+        <article class="item" data-sync-id="${item.id}">
+          <div class="item-top">
+            <div>
+              <strong>${item.title}</strong>
+              <div class="path">${item.type} · ${item.agent} -> ${item.target}</div>
+            </div>
+            <span class="badge ${badgeColor(item.risk)}">${item.risk}</span>
+          </div>
+          <p>${item.summary}</p>
+          <div class="queue-actions">
+            <button class="mini accept" data-action="approve">approve</button>
+            <button class="mini reject" data-action="reject">reject</button>
+            <button class="mini private" data-action="private">private</button>
+            <button class="mini" data-action="conflict">conflict</button>
+          </div>
+        </article>
+      `).join("");
+      document.querySelectorAll("[data-sync-id] .mini").forEach(button => {
+        button.addEventListener("click", event => {
+          const card = event.currentTarget.closest("[data-sync-id]");
+          data.sync = data.sync.filter(item => item.id !== card.dataset.syncId);
+          updateCounts();
+          renderSync();
+        });
+      });
+    }
+
+    function renderConflicts() {
+      document.getElementById("conflict-list").innerHTML = data.conflicts.map(item => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${item.title}</strong>
+            <span class="badge ${badgeColor(item.status)}">${item.status}</span>
+          </div>
+          <p>${item.summary}</p>
+          <div class="path">severity ${item.severity} · owner ${item.owner}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderSkills() {
+      document.getElementById("skill-list").innerHTML = data.skills.map(item => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${item.title}</strong>
+            <span class="badge ${badgeColor(item.status)}">${item.status}</span>
+          </div>
+          <p>${item.summary}</p>
+        </article>
+      `).join("");
+
+      document.getElementById("skill-table").innerHTML = `
+        <thead><tr><th>产品</th><th>入口</th><th>接入方式</th></tr></thead>
+        <tbody>
+          <tr><td>QwenPaw</td><td>MEMORY.md / AGENTS.md</td><td>引用 ai-trace-collaboration skill 和 process 四篇规范。</td></tr>
+          <tr><td>Codex</td><td>AGENTS.md</td><td>项目启动时读取共享 skill、项目 MANIFEST 和同步规则。</td></tr>
+          <tr><td>Claude Code</td><td>CLAUDE.md</td><td>导入共享规范，文档分析结果进入候选同步。</td></tr>
+        </tbody>
+      `;
+    }
+
+    function updateCounts() {
+      document.getElementById("sync-count").textContent = data.sync.length;
+      document.getElementById("metric-sync").textContent = data.sync.length;
+    }
+
+    function initMemoryControls() {
+      document.querySelectorAll("#memory-type button").forEach(button => {
+        button.addEventListener("click", () => {
+          activeMemoryType = button.dataset.type;
+          document.querySelectorAll("#memory-type button").forEach(node => node.classList.toggle("active", node === button));
+          renderMemory();
+        });
+      });
+      ["memory-search", "memory-scope", "memory-status", "memory-domain"].forEach(id => {
+        document.getElementById(id).addEventListener("input", renderMemory);
+      });
+    }
+
+    function boot() {
+      document.querySelectorAll(".nav-btn").forEach(button => {
+        button.addEventListener("click", () => switchView(button.dataset.view));
+      });
+      renderSubnav();
+      renderDesks();
+      renderActivity();
+      renderWiki();
+      renderMemory();
+      renderSync();
+      renderConflicts();
+      renderSkills();
+      updateCounts();
+      initMemoryControls();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
