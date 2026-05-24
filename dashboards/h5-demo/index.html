@@ -671,7 +671,7 @@
       <nav class="main-nav" aria-label="一级菜单">
         <button class="nav-btn active" data-view="office"><span><i class="nav-dot"></i>Office</span><span class="count">6</span></button>
         <button class="nav-btn" data-view="wiki"><span><i class="nav-dot"></i>Wiki</span><span class="count">4</span></button>
-        <button class="nav-btn" data-view="memory"><span><i class="nav-dot"></i>Memory</span><span class="count">14</span></button>
+        <button class="nav-btn" data-view="profile"><span><i class="nav-dot"></i>Profile</span><span class="count">14</span></button>
         <button class="nav-btn" data-view="sync"><span><i class="nav-dot"></i>Sync</span><span class="count" id="sync-count">5</span></button>
         <button class="nav-btn" data-view="conflicts"><span><i class="nav-dot"></i>Conflicts</span><span class="count">2</span></button>
         <button class="nav-btn" data-view="skills"><span><i class="nav-dot"></i>Skills</span><span class="count">1</span></button>
@@ -750,33 +750,33 @@
         </div>
       </section>
 
-      <section id="memory" class="view hidden">
+      <section id="profile" class="view hidden">
         <div class="panel">
           <div class="panel-head">
-            <h3>Memory 管理</h3>
+            <h3>Profile 管理</h3>
             <span>偏好、知识、教训都需要筛选和审计</span>
           </div>
           <div class="panel-body">
-            <div class="segmented" id="memory-type">
+            <div class="segmented" id="profile-type">
               <button class="active" data-type="preference">Preferences</button>
               <button data-type="knowledge">Knowledge</button>
               <button data-type="lesson">Lessons</button>
             </div>
             <div class="filters">
-              <input id="memory-search" type="search" placeholder="搜索标题、内容、来源">
-              <select id="memory-scope">
+              <input id="profile-search" type="search" placeholder="搜索标题、内容、来源">
+              <select id="profile-scope">
                 <option value="all">全部范围</option>
                 <option value="private">private</option>
                 <option value="cross-agent">cross-agent</option>
                 <option value="global">global</option>
               </select>
-              <select id="memory-status">
+              <select id="profile-status">
                 <option value="all">全部状态</option>
                 <option value="candidate">candidate</option>
                 <option value="validated">validated</option>
                 <option value="retired">retired</option>
               </select>
-              <select id="memory-domain">
+              <select id="profile-domain">
                 <option value="all">全部领域</option>
                 <option value="communication">communication</option>
                 <option value="workflow">workflow</option>
@@ -784,7 +784,7 @@
                 <option value="execution">execution</option>
               </select>
             </div>
-            <div class="cards" id="memory-list"></div>
+            <div class="cards" id="profile-list"></div>
           </div>
         </div>
       </section>
@@ -834,7 +834,7 @@
 
   <script>
     let activeView = "office";
-    let activeMemoryType = "preference";
+    let activeProfileType = "preference";
 
     const data = {
       agents: [
@@ -854,12 +854,12 @@
       menu: [
         { top: "Office", subs: ["Live Floor", "Agent Detail", "Handoff"] },
         { top: "Wiki", subs: ["System", "Projects", "Knowledge", "Decisions", "Lessons"] },
-        { top: "Memory", subs: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"] },
+        { top: "Profile", subs: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"] },
         { top: "Sync", subs: ["Queue", "Approved", "Rejected", "Private"] },
         { top: "Conflicts", subs: ["Open", "Reviewing", "Resolved"] },
         { top: "Skills", subs: ["Shared Skill", "Install Notes", "Output Templates"] }
       ],
-      memory: [
+      profile: [
         { type: "preference", title: "Obsidian 与 ai-trace 合一", domain: "workflow", scope: "global", status: "validated", confidence: "high", source: "user", summary: "共享区直接作为 Obsidian Vault，H5 也读取同一份文件，避免双写不一致。" },
         { type: "preference", title: "偏好必须可筛选", domain: "workflow", scope: "cross-agent", status: "candidate", confidence: "high", source: "user", summary: "偏好按范围、领域、状态、置信度、来源 Agent 筛选，避免长期记忆污染。" },
         { type: "preference", title: "沟通更偏讨论和落地", domain: "communication", scope: "global", status: "validated", confidence: "high", source: "profile", summary: "先讨论框架，再沉淀规范和 demo，避免过早碎片化。" },
@@ -874,16 +874,16 @@
         { id: "sync_001", title: "偏好筛选规则", type: "preference_candidate", agent: "qwenpaw", risk: "medium", target: "preferences/", summary: "将偏好按 scope/domain/status/confidence/source_agent/reviewer 管理。" },
         { id: "sync_002", title: "知识筛选规则", type: "knowledge_candidate", agent: "codex", risk: "medium", target: "knowledge/", summary: "知识按 domain/type/status/confidence/source/last_reviewed_at 管理。" },
         { id: "sync_003", title: "私有教训整合标记", type: "lesson_candidate", agent: "qwenpaw", risk: "low", target: "lessons/candidates/", summary: "私有教训应记录 integrated_at、integrated_to、reviewer。" },
-        { id: "sync_004", title: "H5 一级菜单", type: "dashboard_update", agent: "codex", risk: "low", target: "process/INFORMATION_FLOW_SPEC.md", summary: "Office、Wiki、Memory、Sync、Conflicts、Skills 六个一级菜单。" },
+        { id: "sync_004", title: "H5 一级菜单", type: "dashboard_update", agent: "codex", risk: "low", target: "process/INFORMATION_FLOW_SPEC.md", summary: "Office、Wiki、Profile、Sync、Conflicts、Skills 六个一级菜单。" },
         { id: "sync_005", title: "共享 skill 草案", type: "skill", agent: "codex", risk: "low", target: "knowledge/skills/ai-trace-collaboration/", summary: "让多个 Agent 使用同一套协作、同步、交接规范。" }
       ],
       conflicts: [
         { title: "README 中 daily/ 与实际 reports/daily 不一致", severity: "medium", status: "open", owner: "QwenPaw", summary: "需要更新入口文档，避免新 Agent 写错位置。" },
-        { title: "偏好私有记录和共享记录谁为准", severity: "high", status: "reviewing", owner: "枫叶", summary: "建议优先级：用户确认 > shared validated > private memory > raw log。" }
+        { title: "偏好私有记录和共享记录谁为准", severity: "high", status: "reviewing", owner: "枫叶", summary: "建议优先级：用户确认 > shared validated > private profile > raw log。" }
       ],
       activity: [
         { title: "Codex", meta: "working · ai-trace", summary: "正在重构规范文档和 H5 demo。" },
-        { title: "QwenPaw", meta: "review-needed · memory", summary: "后续负责把偏好、教训、知识候选纳入审核流程。" },
+        { title: "QwenPaw", meta: "review-needed · profile", summary: "后续负责把偏好、教训、知识候选纳入审核流程。" },
         { title: "Claude Code", meta: "idle · docs", summary: "适合接文档分析、规范对比和总结任务。" }
       ],
       skills: [
@@ -896,7 +896,7 @@
     const subnavs = {
       office: ["Live Floor", "Agent Detail", "Handoff"],
       wiki: ["System", "Projects", "Knowledge", "Decisions", "Lessons"],
-      memory: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"],
+      profile: ["Preferences", "Knowledge Review", "Lessons", "Raw Links"],
       sync: ["Queue", "Approved", "Rejected", "Private"],
       conflicts: ["Open", "Reviewing", "Resolved"],
       skills: ["Shared Skill", "Install Notes", "Output Templates"]
@@ -905,7 +905,7 @@
     const titles = {
       office: ["Office · Live Floor", "AI 办公空间", "像办公室一样看见每个 Agent 的状态、当前项目、最近动作和交接需求。"],
       wiki: ["Wiki · Shared Vault", "Wiki 与控制台合一", "Obsidian 和 H5 读取同一份 ai-trace 文件，文档、项目、知识和决策都从这里进入。"],
-      memory: ["Memory · Filters", "记忆筛选台", "偏好、知识、教训都需要按范围、领域、状态和来源筛选，才能长期维护。"],
+      profile: ["Profile · Filters", "筛选台", "偏好、知识、教训都需要按范围、领域、状态和来源筛选，才能长期维护。"],
       sync: ["Sync · Review Queue", "同步审核台", "决定哪些候选内容进入共享层，哪些拒绝、保留私有或转为冲突。"],
       conflicts: ["Conflicts · Resolution", "冲突池", "把偏好、项目进度、路径、知识结论的不一致显式化，让所有 Agent 看到同一份处理结果。"],
       skills: ["Skills · Shared Protocol", "共享 Skill", "把 ai-trace 协作规范变成多个 Agent 都能读取和执行的操作说明。"]
@@ -991,12 +991,12 @@
       `).join("");
     }
 
-    function memoryMatches(item) {
-      const q = document.getElementById("memory-search").value.trim().toLowerCase();
-      const scope = document.getElementById("memory-scope").value;
-      const status = document.getElementById("memory-status").value;
-      const domain = document.getElementById("memory-domain").value;
-      if (item.type !== activeMemoryType) return false;
+    function profileMatches(item) {
+      const q = document.getElementById("profile-search").value.trim().toLowerCase();
+      const scope = document.getElementById("profile-scope").value;
+      const status = document.getElementById("profile-status").value;
+      const domain = document.getElementById("profile-domain").value;
+      if (item.type !== activeProfileType) return false;
       if (scope !== "all" && item.scope !== scope) return false;
       if (status !== "all" && item.status !== status) return false;
       if (domain !== "all" && item.domain !== domain) return false;
@@ -1004,9 +1004,9 @@
       return [item.title, item.summary, item.source, item.domain, item.scope].join(" ").toLowerCase().includes(q);
     }
 
-    function renderMemory() {
-      const filtered = data.memory.filter(memoryMatches);
-      document.getElementById("memory-list").innerHTML = filtered.map(item => `
+    function renderProfile() {
+      const filtered = data.profile.filter(profileMatches);
+      document.getElementById("profile-list").innerHTML = filtered.map(item => `
         <article class="item">
           <div class="item-top">
             <strong>${item.title}</strong>
@@ -1086,16 +1086,16 @@
       document.getElementById("metric-sync").textContent = data.sync.length;
     }
 
-    function initMemoryControls() {
-      document.querySelectorAll("#memory-type button").forEach(button => {
+    function initProfileControls() {
+      document.querySelectorAll("#profile-type button").forEach(button => {
         button.addEventListener("click", () => {
-          activeMemoryType = button.dataset.type;
-          document.querySelectorAll("#memory-type button").forEach(node => node.classList.toggle("active", node === button));
-          renderMemory();
+          activeProfileType = button.dataset.type;
+          document.querySelectorAll("#profile-type button").forEach(node => node.classList.toggle("active", node === button));
+          renderProfile();
         });
       });
-      ["memory-search", "memory-scope", "memory-status", "memory-domain"].forEach(id => {
-        document.getElementById(id).addEventListener("input", renderMemory);
+      ["profile-search", "profile-scope", "profile-status", "profile-domain"].forEach(id => {
+        document.getElementById(id).addEventListener("input", renderProfile);
       });
     }
 
@@ -1107,12 +1107,12 @@
       renderDesks();
       renderActivity();
       renderWiki();
-      renderMemory();
+      renderProfile();
       renderSync();
       renderConflicts();
       renderSkills();
       updateCounts();
-      initMemoryControls();
+      initProfileControls();
     }
 
     boot();

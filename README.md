@@ -2,36 +2,96 @@
 
 > 多 Agent 信息归一化系统的公开讨论仓库
 
-这个仓库只放可公开讨论、可开源、可审阅的子集：
+这个仓库是 `ai-trace` 公开子集的集合，适合讨论、审阅和逐步演进，不包含私有日志、私有项目和个人敏感数据。
 
-- `docs/`：系统规范、内容模型、Agent 规范、流程规范、对齐工作台
-- `dashboards/`：H5 / 本地演示页
+## 这是什么
 
-不放这些内容：
+`ai-trace` 是一个面向多 Agent 协作的内容框架。它关注的是：
+
+- 如何把原始对话和工具输出整理成结构化对象
+- 如何让偏好、教训、知识、项目、决策、冲突和审计保持一致
+- 如何让多个 AI 共用一份真相源，而不是各记各的
+- 如何用 Wiki 和 H5 把整个系统可视化出来
+
+这个仓库是它的公开镜像，用来做：
+
+- 公开讨论
+- 规范审阅
+- 方案收敛
+- 演示页和协作技能沉淀
+
+## 这不是什么
+
+这个仓库不包含：
 
 - 原始对话
 - 私有项目文件
 - 私有知识碎片
 - 私有报告流水
-- 私有身份 / 偏好 / 教训原件
+- 私有身份、偏好、教训原件
 
-## 核心目标
+它也不是运行时工作区本身。真正的运行数据和敏感信息仍然留在私有工作区。
 
-1. 说明内容如何设计和处理：
-   - 原始日志如何粗加工、归并、提炼、审核、归档
-   - 偏好、教训、知识、项目、决策、冲突如何分层
+## 仓库结构
 
-2. 说明后台和知识库如何配合：
-   - H5 只发起动作，不直接改共享真相源
-   - 规范文件默认公有，但除主控 Agent 外只读
-   - Knowledge / Project / Audit / Conflict / Decision 的统一视图和审计链
+- `docs/definitions/`
+  稳定定义和系统规范。
+- `docs/roadmap/`
+  目标路线图和推进顺序。
+- `dashboards/`
+  静态 H5 演示页和界面原型。
 
-## 入口
+### 主文件
 
-- `docs/INDEX.md`
-- `docs/ALIGNMENT.md`
-- `docs/AI_TRACE_SYSTEM.md`
-- `docs/CONTENT_MODEL_SPEC.md`
-- `docs/AGENT_SPEC.md`
-- `docs/INFORMATION_FLOW_SPEC.md`
+- `docs/definitions/ALIGNMENT.md`
+  核心术语、范围、对象模型和流程规则的对齐工作台。
+- `docs/roadmap/ROADMAP.md`
+  公开规范的推进目标，以及如何把更好的结论反哺回私有工作区。
 
+### 支持文件
+
+- `docs/definitions/system/AI_TRACE_SYSTEM.md`
+- `docs/definitions/content/CONTENT_MODEL_SPEC.md`
+- `docs/definitions/agent/AGENT_SPEC.md`
+- `docs/definitions/flow/INFORMATION_FLOW_SPEC.md`
+- `docs/definitions/interface/SKILL.md`
+
+## 怎么阅读
+
+如果你第一次看这个仓库，建议按这个顺序：
+
+1. `docs/definitions/ALIGNMENT.md`
+   - 当前对齐的工作协议
+   - 现有内容分类
+   - 私有 / 共享边界
+   - 审计与流程假设
+
+2. `docs/roadmap/ROADMAP.md`
+   - 正在推进的目标
+   - 这些目标的优先顺序
+   - 公共规范、私有工作区和 H5 层分别要改什么
+
+3. `docs/definitions/*`
+   - 解释稳定定义的支持规范
+
+4. `dashboards/h5-demo/`
+   - 办公空间、Wiki、Profile 筛选、同步队列、冲突和技能的可视化概念
+
+## 和私有工作区的关系
+
+- 私有工作区：本地 `~/.ai-trace`
+- 公开仓库：这个仓库
+- 默认方向：私有工作区 -> 公开仓库
+- 公开仓库里确认更优的规范，后续可以反哺私有工作区
+- 私有运行数据保持私有，只有在明确提炼后才进入公开规范
+
+## 设计原则
+
+- 公开规范要小、清晰、可审阅。
+- 运行数据和规范要分开。
+- 优先使用可追溯对象和明确审计链，而不是大段不透明对话。
+- H5 负责展示和动作入口，不负责成为第二个真相源。
+
+## 当前状态
+
+这个仓库还在持续演进中。公开规范是有观点的，也会随着对齐工作继续调整。

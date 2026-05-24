@@ -13,29 +13,26 @@
 
 ## 文档结构
 
-建议保留 5 个 Markdown 作为长期主规范：
+建议把 `definitions/ALIGNMENT.md` 和 `roadmap/ROADMAP.md` 作为长期主文件：
 
-1. `AI_TRACE_SYSTEM.md`
-   系统目标、总架构、共享真相源和目录边界。
+1. `ALIGNMENT.md`
+   单文件对齐工作台。后续你输出场景，我先在这个文件里判断是否明确，再逐步把结论收敛进正式规范。
 
-2. `CONTENT_MODEL_SPEC.md`
-   9 类内容对象、基础字段、公私归属、命名与存储格式。
+2. `ROADMAP.md`
+   目标路线图。按目标分类推进公开仓，每个目标再反向优化私有仓。
 
-3. `AGENT_SPEC.md`
-   Agent 类型、注册流程、权限边界、启动和退出动作。
+`definitions/` 下的其余文件作为支持规范，按需要逐步完善：
 
-4. `INFORMATION_FLOW_SPEC.md`
-   原始输入如何提炼、脱敏、去重、冲突检查、进入审核和共享。
-
-5. `SKILL.md`
-   给 Agent 读的动作手册，只写启动读什么、写哪里、禁止什么、如何交接。
-
-## 辅助文件
-
-- `MULTI_AGENT_WIKI_SPEC.md`
-  仅作为旧版索引和讨论入口，不再承载主规范正文。
-- `ALIGNMENT.md`
-  单文件对齐工作台。后续你输出场景，我先在这个文件里判断是否明确，再逐步把结论收敛进正式规范。
+- `AI_TRACE_SYSTEM.md`
+  系统目标、总架构、共享真相源和目录边界。
+- `CONTENT_MODEL_SPEC.md`
+  9 类内容对象、基础字段、公私归属、命名与存储格式。
+- `AGENT_SPEC.md`
+  Agent 类型、注册流程、权限边界、启动和退出动作。
+- `INFORMATION_FLOW_SPEC.md`
+  原始输入如何提炼、脱敏、去重、冲突检查、进入审核和共享。
+- `SKILL.md`
+  给 Agent 读的动作手册，只写启动读什么、写哪里、禁止什么、如何交接。
 
 ## 推荐目录
 
@@ -43,12 +40,15 @@
 .ai-trace/
   docs/
     INDEX.md
-    ALIGNMENT.md
-    AI_TRACE_SYSTEM.md
-    CONTENT_MODEL_SPEC.md
-    AGENT_SPEC.md
-    INFORMATION_FLOW_SPEC.md
-    SKILL.md
+    definitions/
+      ALIGNMENT.md
+      system/AI_TRACE_SYSTEM.md
+      content/CONTENT_MODEL_SPEC.md
+      agent/AGENT_SPEC.md
+      flow/INFORMATION_FLOW_SPEC.md
+      interface/SKILL.md
+    roadmap/
+      ROADMAP.md
   registry/
   agents/
   candidates/
