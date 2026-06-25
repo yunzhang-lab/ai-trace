@@ -1,0 +1,34 @@
+[
+  {
+    "agent_id": "codex",
+    "product": "Codex",
+    "default_private_root": "~/.codex",
+    "core_markers": ["session_index.jsonl", "sessions/", "config.toml"],
+    "session_source_type": "session_index",
+    "default_workspace_mode": "multi-space"
+  },
+  {
+    "agent_id": "claude",
+    "product": "Claude Code",
+    "default_private_root": "~/.claude",
+    "core_markers": ["sessions/", "CLAUDE.md"],
+    "session_source_type": "session_dir",
+    "default_workspace_mode": "single-space"
+  },
+  {
+    "agent_id": "qwenpaw",
+    "product": "QwenPaw",
+    "default_private_root": "~/.qwenpaw",
+    "core_markers": ["AGENTS.md"],
+    "session_source_type": "workspace_dir",
+    "default_workspace_mode": "unknown"
+  },
+  {
+    "agent_id": "antigravity",
+    "product": "Antigravity",
+    "default_private_root": "~/.antigravity",
+    "core_markers": ["antigravity.toml", "AGENTS.md"],
+    "session_source_type": "session_index",
+    "default_workspace_mode": "multi-space"
+  }
+]

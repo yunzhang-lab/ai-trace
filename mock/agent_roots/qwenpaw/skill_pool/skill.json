@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "file_reader",
+      "status": "enabled"
+    },
+    {
+      "name": "multi_agent_collaboration",
+      "status": "enabled"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Card",
+  "type": "object",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "稳定 Agent ID"
+    },
+    "candidate_id": {
+      "type": "string"
+    },
+    "product": {
+      "type": "string"
+    },
+    "alias": {
+      "type": "string",
+      "description": "用户填写的自定义名称"
+    },
+    "workspace_mode": {
+      "type": "string",
+      "enum": ["single-space", "multi-space", "unknown"]
+    },
+    "selected_workspace": {
+      "type": ["string", "null"],
+      "description": "真实选择的根工作区"
+    },
+    "selected_workspace_masked": {
+      "type": ["string", "null"]
+    },
+    "root_path_private": {
+      "type": "string"
+    },
+    "root_path_masked": {
+      "type": "string"
+    },
+    "session_source_type": {
+      "type": "string",
+      "enum": ["session_index", "session_dir", "workspace_dir", "unknown"]
+    },
+    "session_index_path": {
+      "type": ["string", "null"]
+    },
+    "session_count": {
+      "type": "integer"
+    },
+    "workspace_count": {
+      "type": "integer"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["registered", "disabled"]
+    },
+    "detected_markers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "agent_id",
+    "candidate_id",
+    "product",
+    "alias",
+    "workspace_mode",
+    "selected_workspace_masked",
+    "root_path_masked",
+    "session_source_type",
+    "status",
+    "created_at",
+    "updated_at"
+  ]
+}

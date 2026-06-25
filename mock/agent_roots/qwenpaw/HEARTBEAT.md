@@ -1,0 +1,3 @@
+# QwenPaw Mock Heartbeat
+
+Last mock heartbeat: 2026-06-21T12:00:00Z.

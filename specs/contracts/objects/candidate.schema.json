@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Candidate",
+  "type": "object",
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "description": "扫描候选唯一 ID，格式为 candidate-<agent_id>"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "稳定 Agent ID，如 claude、codex、qwenpaw、antigravity"
+    },
+    "product": {
+      "type": "string",
+      "description": "产品名称，如 Claude Code"
+    },
+    "suggested_alias": {
+      "type": "string",
+      "description": "扫描时推荐的别名，默认等于 product"
+    },
+    "root_path": {
+      "type": "string",
+      "description": "私有真实根路径（绝对路径，必须留在私有仓）"
+    },
+    "root_path_masked": {
+      "type": "string",
+      "description": "脱敏展示路径，如 ~/.claude"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate"],
+      "description": "固定为 candidate"
+    },
+    "workspace_mode": {
+      "type": "string",
+      "enum": ["single-space", "multi-space", "unknown"]
+    },
+    "session_source_type": {
+      "type": "string",
+      "enum": ["session_index", "session_dir", "workspace_dir", "unknown"]
+    },
+    "session_count": {
+      "type": "integer"
+    },
+    "workspace_count": {
+      "type": "integer"
+    },
+    "session_index_path": {
+      "type": ["string", "null"],
+      "description": "私有真实路径，不出现在公开仓"
+    },
+    "detected_markers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sample_workspaces": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "真实样例路径，留在私有仓"
+    },
+    "sample_workspaces_masked": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "selected_workspace": {
+      "type": ["string", "null"]
+    },
+    "selected_workspace_masked": {
+      "type": ["string", "null"],
+      "description": "默认工作区的脱敏展示路径"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "agent_id",
+    "product",
+    "suggested_alias",
+    "root_path_masked",
+    "status",
+    "workspace_mode",
+    "session_source_type",
+    "session_count",
+    "workspace_count",
+    "detected_markers",
+    "sample_workspaces_masked",
+    "selected_workspace_masked"
+  ]
+}

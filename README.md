@@ -1,106 +1,54 @@
 # ai-trace-open
 
-> 多 Agent 信息归一化系统的公开讨论仓库
+> 多 Agent 协作信息治理与归一化系统公开仓。
 
-这个仓库是 `ai-trace` 公开子集的集合，适合讨论、审阅和逐步演进，不包含私有日志、私有项目和个人敏感数据。
+## 1. 仓库作用
 
-## 这是什么
+`ai-trace-open` 用于定义多 Agent 信息治理的公开规范、阶段路线、执行入口与脱敏 Mock 数据。
 
-`ai-trace` 是一个面向多 Agent 协作的内容框架。它关注的是：
+当前主轴：
 
-- 如何把原始对话和工具输出整理成结构化对象
-- 如何让偏好、教训、知识、项目、决策、冲突和审计保持一致
-- 如何让多个 AI 共用一份真相源，而不是各记各的
-- 如何用 Wiki 和 H5 把整个系统可视化出来
+`Scan -> Register -> Index -> Mark -> Extract -> Review -> Sync -> Audit`
 
-这个仓库是它的公开镜像，用来做：
+公开仓不保存真实私有路径、密钥、原始日志或未脱敏会话。
 
-- 公开讨论
-- 规范审阅
-- 方案收敛
-- 演示页和协作技能沉淀
+## 2. 顶级目录
 
-## 这不是什么
+当前公开仓保持 7 个顶级目录：
 
-这个仓库不包含：
+1. `phases/`：路线图、阶段目标、计划、状态、验收。
+2. `specs/`：已确认的字段、对象、能力与接口规范。
+3. `drafts/`：未确认草案、提案与中间稿。
+4. `discussions/`：讨论留痕、共识沉淀与归档。
+5. `apps/`：CLI、H5 展示工作台与应用层代码。
+6. `mock/`：公开结构化 Mock 数据与 Mock Agent 原生根。
+7. `skill/`：未来单一 `ai-trace` Skill 交付落点。
 
-- 原始对话
-- 私有项目文件
-- 私有知识碎片
-- 私有报告流水
-- 私有身份、偏好、教训原件
+## 3. 统一入口
 
-它也不是运行时工作区本身。真正的运行数据和敏感信息仍然留在私有工作区。
+1. 总入口：[README.md](/README.md)
+2. 阶段入口：[phases/ROADMAP.md](/phases/ROADMAP.md)
+3. 规范入口：[specs/README.md](/specs/README.md)
+4. 后端入口：`python3 apps/cli/main.py <subcommand>`
+5. 前端入口：[apps/dashboard/index.html](/apps/dashboard/index.html)
 
-## 仓库结构
+## 4. 层级关系
 
-- `docs/definitions/`
-  稳定定义和系统规范。
-- `docs/roadmap/`
-  目标路线图和推进顺序。
-- `dashboards/`
-  静态 H5 演示页和界面原型。
+1. `phases/` 负责“什么时候做、做到哪里、是否验收”。
+2. `specs/` 负责“稳定规范是什么”。
+3. `drafts/templates/` 暂存尚未 Promote 的模板设想。
+4. `drafts/` 负责“尚未确认的草案和磨合内容”。
+5. `apps/cli/` 负责执行与落盘。
+6. `apps/dashboard/` 负责展示与动作发起。
+7. `mock/agent_roots/` 承接公开 Mock Agent 原生输入根。
+8. `skill/ai-trace/` 承接未来可分发 Skill 包。
 
-### 主文件
+## 5. 私有区关系
 
-- `docs/definitions/ALIGNMENT.md`
-  核心术语、范围、对象模型和流程规则的对齐工作台。
-- `docs/roadmap/ROADMAP.md`
-  公开规范的推进目标，以及如何把更好的结论反哺回私有工作区。
+真实治理数据默认位于 `~/.ai-trace/`。
 
-### 支持文件
+当前只确认：
 
-- `docs/definitions/system/AI_TRACE_SYSTEM.md`
-- `docs/definitions/content/CONTENT_MODEL_SPEC.md`
-- `docs/definitions/agent/AGENT_SPEC.md`
-- `docs/definitions/flow/INFORMATION_FLOW_SPEC.md`
-- `docs/definitions/interface/SKILL.md`
-
-## 怎么阅读
-
-如果你第一次看这个仓库，建议按这个顺序：
-
-1. `docs/definitions/ALIGNMENT.md`
-   - 当前对齐的工作协议
-   - 现有内容分类
-   - 私有 / 共享边界
-   - 审计与流程假设
-
-2. `docs/roadmap/ROADMAP.md`
-   - 正在推进的目标
-   - 这些目标的优先顺序
-   - 公共规范、私有工作区和 H5 层分别要改什么
-
-3. `docs/definitions/*`
-   - 解释稳定定义的支持规范
-
-4. `dashboards/h5-demo/`
-   - 办公空间、Wiki、Profile 筛选、同步队列、冲突和技能的可视化概念
-
-## 和私有工作区的关系
-
-- 私有工作区：本地 `~/.ai-trace`
-- 公开仓库：这个仓库
-- 默认方向：私有工作区 -> 公开仓库
-- 公开仓库里确认更优的规范，后续可以反哺私有工作区
-- 私有运行数据保持私有，只有在明确提炼后才进入公开规范
-
-## 设计原则
-
-- 公开规范要小、清晰、可审阅。
-- 运行数据和规范要分开。
-- 优先使用可追溯对象和明确审计链，而不是大段不透明对话。
-- H5 负责展示和动作入口，不负责成为第二个真相源。
-
-## 命名由来
-
-“章，纹也；锦绣华美，谓之云章。”
-
-- `云` 代表数字化、流动、同步与连接。
-- `章` 代表纹理、章法、标准与印记。
-
-`ai-trace` 想做的，就是把多 Agent 协作中的信息流动，沉淀成可追溯、可审计、可继承的章法。
-
-## 当前状态
-
-这个仓库还在持续演进中。公开规范是有观点的，也会随着对齐工作继续调整。
+1. `~/.ai-trace/data/` 是私有结构化脚本产物根目录。
+2. `mock/data/` 是公开 Mock 结构化数据根目录。
+3. 私有目录按阶段增量解锁，不提前设计完整目录树。

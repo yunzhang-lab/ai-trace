@@ -1,0 +1,4 @@
+# Antigravity Mock Root Configuration
+[agent]
+name = "Antigravity"
+version = "1.0"

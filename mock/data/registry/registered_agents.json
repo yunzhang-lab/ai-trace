@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-06-24T00:00:00+00:00",
+  "count": 1,
+  "agents": [
+    {
+      "agent_id": "codex",
+      "candidate_id": "candidate-codex",
+      "product": "Codex",
+      "alias": "Codex",
+      "workspace_mode": "single-space",
+      "selected_workspace": "~/Projects/code/ai-trace-open",
+      "selected_workspace_masked": "~/Projects/code/ai-trace-open",
+      "root_path_private": "mock/agent_roots/codex",
+      "root_path_masked": "mock/agent_roots/codex",
+      "session_source_type": "session_index",
+      "session_index_path": "mock/agent_roots/codex/session_index.jsonl",
+      "session_count": 1,
+      "workspace_count": 1,
+      "notes": "Mock registered sample for Phase 2 UI validation.",
+      "status": "registered",
+      "detected_markers": [
+        "session_index.jsonl",
+        "config.toml",
+        "history.jsonl"
+      ],
+      "created_at": "2026-06-24T00:00:00+00:00",
+      "updated_at": "2026-06-24T00:00:00+00:00"
+    }
+  ]
+}
