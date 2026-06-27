@@ -11,7 +11,7 @@
 当前已确认采用“流程优先”和“近细远粗”原则：
 
 - Phase 2 / 3 只锁定 `Scan / Register / Index / Mark`
-- `Project / Preference / Governance / Audit` 等对象的最终模板不应过早 Promote 到 `templates/`
+- `Project / Preference / Governance / Audit` 等对象的最终模板不应过早固化到正式模板落点
 
 因此，原先放在 `templates/` 的知识卡、画像域、治理域模板与虚构案例，统一退回草稿区，等待后续阶段再细化。
 

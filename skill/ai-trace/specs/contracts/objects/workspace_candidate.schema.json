@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Workspace Candidate",
+  "type": "object",
+  "description": "表示本地可能包含会话数据的项目工作区，这是扫描后未深入解析索引的最小呈现边界。",
+  "properties": {
+    "workspace_id": {
+      "type": "string",
+      "description": "唯一标识，一般是对绝对路径的哈希或基于路径生成"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "归属的稳定 Agent ID，例如 'codex'"
+    },
+    "workspace_name": {
+      "type": "string",
+      "description": "推导出的工作区名称，一般为路径末级目录"
+    },
+    "workspace_path_masked": {
+      "type": "string",
+      "description": "脱敏后的绝对路径，例如 '~/Projects/code/ai-trace-open'"
+    },
+    "workspace_path_private": {
+      "type": "string",
+      "description": "真实的绝对路径，只能留在私有层，不能进入公开 mock"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate"],
+      "description": "状态固定为 candidate"
+    },
+    "detected_markers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "扫描到证明是工作区的特征，例如 '.codex' 或 'AGENTS.md'"
+    }
+  },
+  "required": ["workspace_id", "agent_id", "workspace_name", "workspace_path_masked", "status"]
+}

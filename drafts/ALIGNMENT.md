@@ -2,7 +2,7 @@
 
 > updated_at: 2026-06-19
 > status: working-draft
-> purpose: 仅保留跨阶段通用定义；阶段性目录、文件和实现细节统一下放到 `phases/ROADMAP.md`、`phases/phase-*` 与 `specs/`
+> purpose: 仅保留跨阶段通用定义；阶段边界下放到 `phases/ROADMAP.md`，进度进入 `PROGRESS.md`，未确认计划进入 `drafts/plans/`，稳定规范进入 `skill/ai-trace/specs/`
 
 若与根 [README.md](/README.md) 或 [ROADMAP.md](/phases/ROADMAP.md) 冲突，以当前入口与路线图为准。
 
@@ -29,7 +29,7 @@
 | 真相源 | 真实治理层在 `~/.ai-trace`，H5 不是最终真相源 |
 | 原始日志 | 原始对话、原始工具输出先留各 Agent 私有原生区 |
 | 公私边界 | 公开仓不保存真实私有数据、敏感路径、原始会话原文 |
-| 规范文件 | 正式总纲与公开 SPEC 默认公有；未确认内容留在 `drafts/`，确认后进入 `specs/` |
+| 规范文件 | 正式总纲与公开 SPEC 默认公有；未确认内容留在 `drafts/`，确认后进入 `skill/ai-trace/specs/` |
 | 数据流 | 采用“线性主干 + 受控分支 + 审计回流” |
 | 数据载体 | 强结构对象倾向 `JSON / JSONL / SQLite`；语义沉淀内容倾向 `Markdown / Wiki` |
 | 双仓阶段 | 公开仓与私有仓共用同一套阶段主轴，不各自再造独立路线 |
@@ -107,4 +107,4 @@
 对应规则：
 
 - 何时允许定义这些内容：看 [ROADMAP.md](/phases/ROADMAP.md)
-- 一旦进入相邻阶段后如何细化：先进入 `drafts/specs/`，确认后收口到 `specs/`
+- 一旦进入相邻阶段后如何细化：计划先进入 `drafts/plans/`，规范先进入 `drafts/specs/`，确认后收口到 `skill/ai-trace/specs/`

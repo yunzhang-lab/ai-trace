@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Space",
+  "type": "object",
+  "properties": {
+    "space_id": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "description": "私有或本地可解析空间路径"
+    },
+    "path_masked": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "purpose_tag": {
+      "type": "string",
+      "enum": [
+        "工程",
+        "配置",
+        "文档",
+        "未声明"
+      ]
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "all",
+        "none"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "declared",
+        "undeclared"
+      ]
+    },
+    "agent_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_scan": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "agent_count": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "space_id",
+    "path_masked",
+    "purpose",
+    "purpose_tag",
+    "visibility",
+    "status",
+    "agent_ids",
+    "last_scan",
+    "agent_count"
+  ]
+}

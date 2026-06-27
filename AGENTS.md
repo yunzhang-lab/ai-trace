@@ -1,61 +1,9 @@
 # ai-trace-open Agent Guide
 
-## 1. 仓库结构
+> 本文件为 AI Agent 专属行为准则与上下文约定。
+> 仓库结构、各模块入口与阶段定义请统一参考 [README.md](/README.md)。
 
-公开仓保持以下 7 个顶级目录：
-
-1. `phases/`
-1.1 阶段推进层  
-1.2 存放路线图、阶段目标、计划、状态与验收
-
-2. `specs/`
-2.1 稳定规范层  
-2.2 存放已确认的字段、对象、能力与接口规范
-
-3. `drafts/`
-3.1 草稿与磨合沙盒  
-3.2 存放未确认的提案、Spec 草案、中间稿与模板设想
-
-4. `discussions/`
-4.1 讨论留痕与共识沉淀  
-4.2 记录多 Agent 协作过程中的问题、提议与结论
-
-5. `apps/`
-5.1 应用层代码  
-5.2 包含 `cli/` 与 `dashboard/`
-
-6. `mock/`
-6.1 公开 Mock 数据层  
-6.2 承接 `mock/data/` 结构化 Mock 数据与 `mock/agent_roots/` 原生输入根
-
-7. `skill/`
-7.1 Skill 交付层  
-7.2 当前承接未来单一 `ai-trace` Skill 包
-
-## 2. 统一入口
-
-1. 后端 CLI 入口：
-1.1 `apps/cli/main.py`
-
-2. 前端展示入口：
-2.1 `apps/dashboard/index.html`
-
-3. 规范起草入口：
-3.1 `drafts/specs/`
-
-4. 当前总入口：
-4.1 `README.md`
-
-5. 阶段路线图入口：
-5.1 `phases/ROADMAP.md`
-
-6. 稳定规范入口：
-6.1 `specs/README.md`
-
-7. Skill 交付入口：
-7.1 `skill/ai-trace/SKILL.md`
-
-## 3. 协作边界
+## 1. 协作边界
 
 1. 禁止将真实路径、密钥、原始日志提交到公开仓。
 
@@ -68,7 +16,7 @@
 
 4. 代码中禁止硬编码绝对物理路径与个人密钥。
 
-## 4. 输出风格
+## 2. 输出风格
 
 1. 默认使用总分结构。
 

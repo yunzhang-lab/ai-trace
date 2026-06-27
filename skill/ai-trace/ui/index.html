@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Trace</title>
+  <meta name="description" content="AI Trace — 本机 Agent 管理与空间契约层">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+  <script src="js/config/app-shell-data.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AT</div>
+        <div>
+          <h1>AI Trace</h1>
+          <p>Agent · Space · Session</p>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="一级菜单">
+        <button class="nav-btn active" data-view="office" id="nav-home">
+          <span><i class="nav-dot"></i>Home</span>
+          <span class="count">-</span>
+        </button>
+        <button class="nav-btn" data-view="spaces" id="nav-spaces">
+          <span><i class="nav-dot"></i>Spaces</span>
+          <span class="count" id="spaces-count">0</span>
+        </button>
+        <button class="nav-btn" data-view="agents" id="nav-agents">
+          <span><i class="nav-dot"></i>Agents</span>
+          <span class="count" id="agents-count">0</span>
+        </button>
+        <button class="nav-btn locked" disabled title="Sessions 在 Phase 3 解锁">
+          <span><i class="nav-dot"></i>Sessions</span>
+          <span class="count">🔒 P3+</span>
+        </button>
+        <button class="nav-btn locked" disabled title="Settings 待开放">
+          <span><i class="nav-dot"></i>Settings</span>
+          <span class="count">—</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="mode-label">数据模式</div>
+        <div class="mode-toggle" id="mode-toggle" role="group" aria-label="数据模式切换">
+          <button class="mode-btn" data-mode="live" id="mode-live">Live</button>
+          <button class="mode-btn" data-mode="mock" id="mode-mock">Mock</button>
+        </div>
+        <div class="api-status-row">
+          <span class="api-dot" id="api-dot"></span>
+          <span class="api-label" id="api-label">检测中...</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="title">
+          <div class="eyebrow" id="eyebrow">Home</div>
+          <h2 id="page-title">AI Trace</h2>
+          <p id="page-subtitle">扫描本机 Agent、声明空间契约、管理注册状态。</p>
+        </div>
+        <div class="toolbar">
+          <div class="data-source-indicator" id="data-source-indicator">
+            <span class="badge" id="data-source-badge">...</span>
+          </div>
+        </div>
+      </div>
+
+      <section id="office" class="view">
+        <div class="metrics">
+          <div class="metric"><span>空间</span><strong id="home-spaces-total">—</strong></div>
+          <div class="metric"><span>已声明</span><strong class="active-text" id="home-spaces-declared">—</strong></div>
+          <div class="metric"><span>Agent 总数</span><strong id="home-agents-total">—</strong></div>
+          <div class="metric"><span>已注册</span><strong class="active-text" id="home-agents-registered">—</strong></div>
+          <div class="metric"><span>未注册</span><strong id="home-agents-unregistered">—</strong></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>已发现空间</h3>
+              <span>本机一级目录 · 浅层扫描</span>
+            </div>
+            <div class="panel-body" id="home-spaces-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>待注册 Agent</h3>
+              <span>点击注册按钮完成接入</span>
+            </div>
+            <div class="panel-body" id="home-pending-agents"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="spaces" class="view hidden">
+        <div class="view-toolbar manage-toolbar">
+          <div class="toolbar-left">
+            <div class="filter-tabs" id="spaces-filter-tabs">
+              <button class="filter-tab active" data-filter="all">全部</button>
+              <button class="filter-tab" data-filter="工程">工程</button>
+              <button class="filter-tab" data-filter="配置">配置</button>
+              <button class="filter-tab" data-filter="文档">文档</button>
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <button class="tool" id="spaces-pending-open" type="button">待接入空间</button>
+          </div>
+        </div>
+        <div class="subview-note" id="spaces-subview-note">默认查看已注册空间；待接入与已忽略项统一收进弹窗。</div>
+        <div class="spaces-grid" id="spaces-grid"></div>
+        <div class="statusbar">
+          <span>Spaces: <strong id="sb-spaces-total">—</strong></span>
+          <span>已注册: <strong id="sb-spaces-declared">—</strong></span>
+          <span>Last Scan: <strong id="sb-spaces-scan">—</strong></span>
+        </div>
+      </section>
+
+      <section id="agents" class="view hidden">
+        <div class="view-toolbar manage-toolbar">
+          <div class="toolbar-left">
+            <input class="search-input" type="search" id="agents-search" placeholder="搜索已注册 Agent 或工作区…">
+          </div>
+          <div class="toolbar-right">
+            <button class="tool" id="agents-pending-open" type="button">待接入 Agent</button>
+          </div>
+        </div>
+        <div class="subview-note" id="agents-subview-note">主界面仅展示 Agent 卡片；点击卡片查看对应索引摘要。</div>
+        <div id="agents-overview-panel"></div>
+        <div class="statusbar">
+          <span>Total: <strong id="sb-agents-total">—</strong></span>
+          <span>已注册: <strong id="sb-agents-registered">—</strong></span>
+          <span>需关注: <strong id="sb-agents-failed">—</strong></span>
+          <span><span class="api-dot" id="agents-api-dot"></span> API</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <div class="modal hidden" id="agent-intake-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="agent-intake-modal"></div>
+    <div class="modal-card modal-card-wide">
+      <div class="panel-head">
+        <h3>Agent 待接入</h3>
+        <div class="modal-head-actions">
+          <button class="tool" id="agent-intake-rescan" type="button">重新扫描</button>
+          <button class="tool" id="agent-intake-close" type="button">✕</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filter-tabs" id="agent-intake-tabs">
+          <button class="filter-tab active" data-filter="pending" type="button">未注册</button>
+          <button class="filter-tab" data-filter="skipped" type="button">已忽略</button>
+        </div>
+        <div class="intake-list" id="agent-intake-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="space-intake-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="space-intake-modal"></div>
+    <div class="modal-card modal-card-wide">
+      <div class="panel-head">
+        <h3>Spaces 待接入</h3>
+        <div class="modal-head-actions">
+          <button class="tool" id="space-intake-rescan" type="button">重新扫描</button>
+          <button class="tool" id="space-intake-close" type="button">✕</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filter-tabs" id="space-intake-tabs">
+          <button class="filter-tab active" data-filter="pending" type="button">未注册</button>
+          <button class="filter-tab" data-filter="skipped" type="button">已忽略</button>
+        </div>
+        <div class="intake-list" id="space-intake-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="space-register-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="space-register-modal"></div>
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3>空间接入确认</h3>
+        <button class="tool" id="space-register-close" type="button">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="register-info" id="space-register-info"></div>
+        <label class="agent-form-field">
+          <span>用途说明</span>
+          <input id="space-form-purpose" type="text" placeholder="输入该空间用途">
+        </label>
+        <label class="agent-form-field">
+          <span>用途标签</span>
+          <select id="space-form-purpose-tag">
+            <option value="工程">工程</option>
+            <option value="配置">配置</option>
+            <option value="文档">文档</option>
+            <option value="未声明">未声明</option>
+          </select>
+        </label>
+        <label class="agent-form-field">
+          <span>可见性</span>
+          <select id="space-form-visibility">
+            <option value="all">全部 Agent</option>
+            <option value="none">不对外</option>
+          </select>
+        </label>
+        <div class="agent-form-actions">
+          <button class="tool" type="button" id="space-form-cancel">取消</button>
+          <button class="tool primary" type="button" id="space-form-confirm">确认接入</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="agent-register-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="agent-register-modal"></div>
+    <div class="modal-card">
+      <div class="panel-head">
+        <h3>注册确认</h3>
+        <button class="tool" id="agent-register-close" type="button">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="register-info" id="register-info"></div>
+        <label class="agent-form-field">
+          <span>别名</span>
+          <input id="agent-form-alias" type="text" placeholder="输入显示名称">
+        </label>
+        <label class="agent-form-field">
+          <span>工作区</span>
+          <select id="agent-form-workspace"></select>
+        </label>
+        <label class="agent-form-field">
+          <span>备注</span>
+          <textarea id="agent-form-notes" rows="4" placeholder="记录当前实例的接入说明"></textarea>
+        </label>
+        <div class="agent-form-meta">注册后将真实写入 <code>~/.ai-trace/data/agents/</code> 与 <code>~/.ai-trace/data/registry/registered_agents.json</code></div>
+        <div class="agent-form-actions">
+          <button class="tool" type="button" id="agent-form-cancel">取消</button>
+          <button class="tool primary" type="button" id="agent-form-confirm">确认注册</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/views/office.js"></script>
+  <script src="js/views/spaces.js"></script>
+  <script src="js/views/agents.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

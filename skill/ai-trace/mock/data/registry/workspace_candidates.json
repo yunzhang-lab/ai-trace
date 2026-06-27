@@ -1,0 +1,119 @@
+[
+  {
+    "workspace_id": "workspace-claude-0",
+    "candidate_id": "candidate-claude",
+    "agent_id": "claude",
+    "workspace_name": "fengye",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~",
+    "status": "candidate",
+    "detected_markers": [
+      "sessions/",
+      "history.jsonl"
+    ]
+  },
+  {
+    "workspace_id": "workspace-claude-1",
+    "candidate_id": "candidate-claude",
+    "agent_id": "claude",
+    "workspace_name": ".claude",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/.claude",
+    "status": "candidate",
+    "detected_markers": [
+      "sessions/",
+      "history.jsonl"
+    ]
+  },
+  {
+    "workspace_id": "workspace-claude-2",
+    "candidate_id": "candidate-claude",
+    "agent_id": "claude",
+    "workspace_name": "CLIProxyAPI_7.0.5_darwin_aarch64",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/Documents/CLIProxyAPI_7.0.5_darwin_aarch64",
+    "status": "candidate",
+    "detected_markers": [
+      "sessions/",
+      "history.jsonl"
+    ]
+  },
+  {
+    "workspace_id": "workspace-claude-3",
+    "candidate_id": "candidate-claude",
+    "agent_id": "claude",
+    "workspace_name": "学习资料",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/Projects/hanfu/学习资料",
+    "status": "candidate",
+    "detected_markers": [
+      "sessions/",
+      "history.jsonl"
+    ]
+  },
+  {
+    "workspace_id": "workspace-claude-4",
+    "candidate_id": "candidate-claude",
+    "agent_id": "claude",
+    "workspace_name": "商标数据",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/Projects/study/company/商标/商标数据",
+    "status": "candidate",
+    "detected_markers": [
+      "sessions/",
+      "history.jsonl"
+    ]
+  },
+  {
+    "workspace_id": "workspace-qwenpaw-copaw-qa-agent-0-1beta1-0",
+    "candidate_id": "candidate-qwenpaw-copaw-qa-agent-0-1beta1",
+    "agent_id": "qwenpaw-copaw-qa-agent-0-1beta1",
+    "workspace_name": "CoPaw_QA_Agent_0.1beta1",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/.qwenpaw/workspaces/CoPaw_QA_Agent_0.1beta1",
+    "status": "candidate",
+    "detected_markers": [
+      "config.json",
+      "workspaces/"
+    ]
+  },
+  {
+    "workspace_id": "workspace-qwenpaw-default-0",
+    "candidate_id": "candidate-qwenpaw-default",
+    "agent_id": "qwenpaw-default",
+    "workspace_name": "default",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/.qwenpaw/workspaces/default",
+    "status": "candidate",
+    "detected_markers": [
+      "config.json",
+      "workspaces/"
+    ]
+  },
+  {
+    "workspace_id": "workspace-qwenpaw-qwenpaw-qa-agent-0-2-0",
+    "candidate_id": "candidate-qwenpaw-qwenpaw-qa-agent-0-2",
+    "agent_id": "qwenpaw-qwenpaw-qa-agent-0-2",
+    "workspace_name": "QwenPaw_QA_Agent_0.2",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/.qwenpaw/workspaces/QwenPaw_QA_Agent_0.2",
+    "status": "candidate",
+    "detected_markers": [
+      "config.json",
+      "workspaces/"
+    ]
+  },
+  {
+    "workspace_id": "workspace-qwenpaw-y5u3kz-0",
+    "candidate_id": "candidate-qwenpaw-y5u3kz",
+    "agent_id": "qwenpaw-y5u3kz",
+    "workspace_name": "y5u3KZ",
+    "workspace_path_private": null,
+    "workspace_path_masked": "~/.qwenpaw/workspaces/y5u3KZ",
+    "status": "candidate",
+    "detected_markers": [
+      "config.json",
+      "workspaces/"
+    ]
+  }
+]
